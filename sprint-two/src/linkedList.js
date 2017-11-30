@@ -2,14 +2,61 @@ var LinkedList = function() {
   var list = {};
   list.head = null;
   list.tail = null;
+  list.uniqueKey = 0;
 
   list.addToTail = function(value) {
+    // create new node with value
+    var node = Node(value);
+    // add to list with key = list.uniqueKey++
+    list[list.uniqueKey++] = node;
+    // check to see if list is emtpy
+    // if list.head === null, update to new node
+    if(list.head === null) {
+      list.head = node;
+      list.tail = node;
+      return;
+    }
+    // update list.tail.next to be equal to new node
+    list.tail.next = node;
+    // update list.tail to equal new node
+    list.tail = node;
+
   };
 
   list.removeHead = function() {
+    // if list.head === null, return list.head
+    if(list.head === null) {
+      return list.head;
+    }
+    // store list.head.value
+    var result = list.head.value;
+    // store list.head for later deletion
+    var nodeToDelete = list.head;
+    // update list.head = list.head.next
+    list.head = list.head.next;
+    // delete stored list.head
+    delete nodeToDelete;
+    // return value;
+    return result;
   };
 
   list.contains = function(target) {
+    // if list.head === null, return false
+    if(list.head === null) {
+      return false;
+    }
+    // store list.head in temp node
+    var node = list.head;
+    // while node.value !== target && node.next !== null, node = node.next
+    while(node.value !== target && node.next !== null) {
+      node = node.next;
+    }
+    // if node.value === target return true
+    if(node.value === target) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   return list;
