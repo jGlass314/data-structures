@@ -8,23 +8,28 @@ var HashTable = function() {
 HashTable.prototype.insert = function(k, v) {
   var index = getIndexBelowMaxForKey(k, this._limit);
   // check if index points to an undefined
-  // if so, point it to a new linkedList and add and object {k,v} to the tail
-  // if not, add it to the tail of the existing LL
+  if(this._storage.get(index) === undefined) {
+    var obj = {};
+    obj[k] = v;
+    this._storage.set(index,obj);
+  } else {
+    var obj = this._storage.get(index);
+    obj[k] = v;
+    this._storage.set(index,obj);
+  }
+  // if so, point it to a new object and add {k,v}
 };
 
 HashTable.prototype.retrieve = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);
-  // store linkedList at index in a temp variable and retrieve list.head
-  // iterate through LL looking for k
   // return value
+  return this._storage.get(index)[k];
 };
 
 HashTable.prototype.remove = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);
-  // store LL at index in temp variable and retrieve list.head
-  // iterate through LL looking for node before k
-    // if list.head has key k, call removeHead
-    // else, remove next node in LL
+  // remove k from obj in _.storage[index][k]
+  delete this._storage.get(index)[k];
 };
 
 
