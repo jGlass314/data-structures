@@ -7,28 +7,29 @@ var HashTable = function() {
 
 HashTable.prototype.insert = function(k, v) {
   var index = getIndexBelowMaxForKey(k, this._limit);
+  var obj;
   // check if index points to an undefined
+  // if so, point it to a new object
+  // else, point it to the object at _.storage[index]
   if(this._storage.get(index) === undefined) {
-    var obj = {};
-    obj[k] = v;
-    this._storage.set(index,obj);
+    obj = {};
   } else {
-    var obj = this._storage.get(index);
-    obj[k] = v;
-    this._storage.set(index,obj);
+    obj = this._storage.get(index);
   }
-  // if so, point it to a new object and add {k,v}
+  // set obj
+  obj[k] = v;
+  // store at _.storage[index]
+  this._storage.set(index,obj);
+
 };
 
 HashTable.prototype.retrieve = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);
-  // return value
   return this._storage.get(index)[k];
 };
 
 HashTable.prototype.remove = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);
-  // remove k from obj in _.storage[index][k]
   delete this._storage.get(index)[k];
 };
 
