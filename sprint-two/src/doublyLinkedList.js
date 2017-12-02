@@ -1,8 +1,19 @@
-var LinkedList = function() {
+var DoublyLinkedList = function() {
   var list = {};
   list.head = null;
   list.tail = null;
 
+  list.addToHead = function(value) {
+    if(list.head === null) {
+      list.head = Node(value);
+      list.tail = list.head;
+      return;
+    }
+
+    list.head.prev = Node(value);
+    list.head.prev.next = list.head;
+    list.head = list.head.prev;
+  };
   list.addToTail = function(value) {
     // create new node with value
     var node = Node(value);
@@ -13,25 +24,39 @@ var LinkedList = function() {
       list.tail = node;
       return;
     }
-    // update list.tail.next to be equal to new node
     list.tail.next = node;
-    // update list.tail to equal new node
+    node.prev = list.tail;
     list.tail = node;
+  };
+  list.removeTail = function() {
+    if(list.tail === null) {
+      return list.tail;
+    }
+    var result = list.tail.value;
+    if(list.head === list.tail) {
+      list.head = null;
+      list.tail = null;
+    } else {
+      list.tail.prev.next = null;
+      list.tail = list.tail.prev;
+    }
+    return result;
 
   };
-
   list.removeHead = function() {
     // if list.head === null, return list.head
     if(list.head === null) {
       return list.head;
     }
-    // store list.head.value
     var result = list.head.value;
-    // store list.head for later deletion
-    var nodeToDelete = list.head;
-    // update list.head = list.head.next
-    list.head = list.head.next;
-    // return value;
+
+    if(list.head === list.tail) {
+      list.head = null;
+      list.tail = null;
+    } else {
+      list.head = list.head.next;
+      list.head.prev = null;
+    }
     return result;
   };
 
@@ -62,6 +87,7 @@ var Node = function(value) {
 
   node.value = value;
   node.next = null;
+  node.prev = null;
 
   return node;
 };
