@@ -1,6 +1,7 @@
 var Tree = function(value) {
   var newTree = {};
   newTree.value = value;
+  newTree.parent = null;
 
   // your code here
   newTree.children = [];
@@ -13,8 +14,10 @@ var treeMethods = {};
 treeMethods.addChild = function(value) {
   //create new tree with argument value
   var tree = Tree(value);
-  this.children.push(tree);
+  // connect children to parent
+  tree.parent = this;
   //push that tree to currentTree children array
+  this.children.push(tree);
 
 };
 
@@ -28,6 +31,20 @@ treeMethods.contains = function(target) {
     return memo || tree.contains(target);
   }, false);
   return result;
+};
+
+treeMethods.removeFromParent = function() {
+  //access parentTree by parent attribute
+    //find this child and remove it from the children array.
+  //parent attribute to null
+  var parentTree = this.parent;
+  if(parentTree === null) {
+    return;
+  }
+  var indexOfSelf = parentTree.children.indexOf(this);
+  parentTree.children.splice(indexOfSelf, 1);
+  this.parent = null;
+
 };
 
 
