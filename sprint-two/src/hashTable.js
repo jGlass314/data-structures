@@ -1,9 +1,12 @@
 
 
-var HashTable = function() {
-  this._limit = 8;
+var HashTable = function(limit) {
+  this._limit = limit;
   this._storage = LimitedArray(this._limit);
   this._storageSize = 0;
+  this._upperBoundRatio = 0.75;
+  this._lowerBoundRatio = 0.25;
+  this._changeSizeFactor = 2;
 };
 
 HashTable.prototype.insert = function(k, v) {
@@ -40,6 +43,10 @@ HashTable.prototype.insert = function(k, v) {
       this._storageSize++;
     }
   }
+  //numberOfKeys:LimitedArray's length ratio should not go over 0.75
+  if(this._storageSize/this._limit > this._upperBoundRatio) {
+    this.changeTreeSize(this._changeSizeFactor);
+  }
 };
 
 HashTable.prototype.retrieve = function(k) {
@@ -75,8 +82,27 @@ HashTable.prototype.remove = function(k) {
     idxArr.splice(idxArrIdx, 1);
     this._storageSize--;
   }
+  //numberOfKeys:LimitedArray's length ratio should not under 0.25
+  if(this._storageSize/this._limit < this._lowerBoundRatio) {
+    this.changeTreeSize(1/this._changeSizeFactor);
+  }
 };
 
+HashTable.prototype.changeTreeSize = function(factor) {
+  var tree = this;
+  this._limit = Math.round(this._limit * factor);
+  var oldStorage = this._storage;
+  this._storage = new LimitedArray(this._limit);
+  //we need to reset our key:value counter because we are inserting values again
+  this._storageSize = 0;
+  oldStorage.each(function (innerIdxArray, innerIdx, collection) {
+    if(innerIdxArray !== undefined) {
+      innerIdxArray.forEach(function(item) {
+        tree.insert(item[0],item[1]);
+      });
+    }
+  });
+};
 
 
 /*
