@@ -44,8 +44,16 @@ treeMethods.removeFromParent = function() {
   var indexOfSelf = parentTree.children.indexOf(this);
   parentTree.children.splice(indexOfSelf, 1);
   this.parent = null;
-
 };
+
+treeMethods.traverse = function(cb) {
+  this.children.forEach(function(tree) {
+    tree.traverse(cb);
+  });
+  if(this.value !== undefined) {
+    cb(this.value);
+  }
+}
 
 
 

@@ -66,4 +66,17 @@ describe('tree', function() {
     expect(tree.contains(6)).to.equal(false);
   });
 
+  it('should be able call the callback function in each node of the tree', function() {
+    var arr = [];
+    tree.addChild(5);
+    tree.addChild(6);
+    tree.children[0].addChild(7);
+    tree.children[1].addChild(8);
+    var pushToArray = function(val) {
+      arr.push(val);
+    }
+    tree.traverse(pushToArray);
+    expect(arr.sort()).to.eql([5,6,7,8]);
+
+  });
 });
