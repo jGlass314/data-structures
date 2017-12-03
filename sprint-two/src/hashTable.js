@@ -45,7 +45,7 @@ HashTable.prototype.insert = function(k, v) {
   }
   //numberOfKeys:LimitedArray's length ratio should not go over 0.75
   if(this._storageSize/this._limit > this._upperBoundRatio) {
-    this.changeTreeSize(this._changeSizeFactor);
+    this.resize(this._changeSizeFactor);
   }
 };
 
@@ -84,11 +84,23 @@ HashTable.prototype.remove = function(k) {
   }
   //numberOfKeys:LimitedArray's length ratio should not under 0.25
   if(this._storageSize/this._limit < this._lowerBoundRatio) {
-    this.changeTreeSize(1/this._changeSizeFactor);
+    this.resize(1/this._changeSizeFactor);
   }
 };
 
-HashTable.prototype.changeTreeSize = function(factor) {
+HashTable.prototype.resize = function(factor) {
+
+  var newTree = new HashTable(Math.round(this._limit * factor));
+  this._storage.each(function(innerIdxArray, innerIdx, collection) {
+    if(innerIdxArray !== undefined) {
+      innerIdxArray.forEach(function(item) {
+        newTree.insert(item[0],item[1]);
+      });
+    }
+  });
+  console.log("test this:",this);
+//  this = newTree;
+/*
   var tree = this;
   this._limit = Math.round(this._limit * factor);
   var oldStorage = this._storage;
@@ -102,6 +114,7 @@ HashTable.prototype.changeTreeSize = function(factor) {
       });
     }
   });
+*/
 };
 
 

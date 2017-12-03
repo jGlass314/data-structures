@@ -2,6 +2,7 @@ var LinkedList = function() {
   var list = {};
   list.head = null;
   list.tail = null;
+  list.length = 0;
 
   list.addToTail = function(value) {
     // create new node with value
@@ -11,12 +12,14 @@ var LinkedList = function() {
     if(list.head === null) {
       list.head = node;
       list.tail = node;
+      list.length++;
       return;
     }
     // update list.tail.next to be equal to new node
     list.tail.next = node;
     // update list.tail to equal new node
     list.tail = node;
+    list.length++;
 
   };
 
@@ -27,10 +30,9 @@ var LinkedList = function() {
     }
     // store list.head.value
     var result = list.head.value;
-    // store list.head for later deletion
-    var nodeToDelete = list.head;
     // update list.head = list.head.next
     list.head = list.head.next;
+    list.length--;
     // return value;
     return result;
   };
